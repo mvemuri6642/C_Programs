@@ -5,7 +5,7 @@
  */
 
 /* 
- * File:   main.c
+ * File:   Binary_Search_Tree.c
  * Author: Manohar
  *
  * Created on August 21, 2019, 9:19 PM

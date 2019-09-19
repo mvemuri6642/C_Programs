@@ -1,18 +1,20 @@
+#include<ctype.h>
 #include<stdio.h>
 #include<stdlib.h>
-struct polynode{
+struct polynode
+{
 	double coeff;
 	int power;
 	struct polynode *link;
-};typedef struct polynode *polyptr;
+};
+typedef struct polynode *polyptr;
 polyptr readpoly();
 void writepoly(polyptr first);
 polyptr insertend(polyptr first,double coeff,int power);
 polyptr addpoly(polyptr p1,polyptr p2);
 polyptr polymult(polyptr p1,polyptr p2);
-main(){
-	polyptr p1,p2,p3;
-	double root;
+void main(){
+	polyptr p1,p2,p3,p4;
 	p1=readpoly();
 	printf("\n First Polynomial");
 	writepoly(p1);
@@ -20,53 +22,11 @@ main(){
 	printf("\n Second Polynomial");
 	writepoly(p2);
 	p3=addpoly(p1,p2);
-	printf("Addition of Second Polynomial:");
+	printf("\nAddition of First and Second Polynomial:");
 	writepoly(p3);
-}
-polyptr readpoly(){
-	polyptr first=NULL;
-	double c;
-	int p;
-	printf("enter coeff and power in increasing order of power:");
-	scanf("%lf%d",&c,&p);
-	while(c!=0){
-		first=insertend(first,c,p);
-		printf("enter coeff and power and terminate with 0,0");
-		scanf("%lf%d",&c,&p);
-	}
-	return first;
-}
-void writepoly(polyptr first){
-	polyptr t;
-	if(first==NULL){
-		return;
-	}
-	t=first;
-	while(t->link!=NULL){
-		printf("%lf*x^%dt",t->coeff,t->power);
-		t=t->link;
-	}
-	printf("%lf*x^%d",t->coeff,t->power);
-}
-polyptr insertend(polyptr first,double coeff,int power){
-	polyptr p,t;
-	p=(polyptr)malloc(sizeof(struct polynode));
-	if(p==NULL){
-		printf("no space is available:");
-		exit(1);
-	}
-	p->coeff=coeff;
-	p->power=power;
-	p->link=NULL;
-	if(first=NULL){
-		return p;
-	}
-	t=first;
-	while(t->link!=NULL){
-		t=t->link;
-	}
-	t->link=p;
-	return first;
+	p4=polymult(p1,p2);
+	printf("\nMultiplication of First and Second Polynomial:");
+	writepoly(p4);
 }
 polyptr addpoly(polyptr p1,polyptr p2){
 	double x;
@@ -107,4 +67,63 @@ polyptr addpoly(polyptr p1,polyptr p2){
 	}
 		
 }
+polyptr polymult(polyptr p1,polyptr p2){
+	polyptr t1,t2,temp,sum=NULL;
+	t1=p1;
+	while(t1!=NULL){
+		temp=NULL;
+		t2=p2;
+		while(t2!=NULL){
+			temp=insertend(temp,t1->coeff*t2->coeff,t1->power*t2->power);
+		}
+		sum=addpoly(sum,temp);
+		t1=t1->link;
+	}
+	return sum;
+}
 
+polyptr readpoly(){
+	polyptr first=NULL;
+	double c;
+	int p;
+	printf("enter coeff and power in increasing order of power:");
+	scanf("%lf%d",&c,&p);
+	while(c!=0){
+		first=insertend(first,c,p);
+		printf("enter coeff and power(terminate with 0,0)");
+		scanf("%lf%d",&c,&p);
+	}
+	return first;
+}
+void writepoly(polyptr first){
+	polyptr t;
+	if(first==NULL){
+		return;
+	}
+	t=first;
+	while(t->link!=NULL){
+		printf("%lf*x^%d",t->coeff,t->power);
+		t=t->link;
+	}
+	printf("%lf*x^%d",t->coeff,t->power);
+}
+polyptr insertend(polyptr first,double coeff,int power){
+	polyptr p,t;
+	p=(polyptr)malloc(sizeof(struct polynode));
+	if(p==NULL){
+		printf("no space is available:");
+		exit(1);
+	}
+	p->coeff=coeff;
+	p->power=power;
+	p->link=NULL;
+	if(first==NULL){
+		return p;
+	}
+	t=first;
+	while(t->link!=NULL){
+		t=t->link;
+	}
+	t->link=p;
+	return first;
+}
